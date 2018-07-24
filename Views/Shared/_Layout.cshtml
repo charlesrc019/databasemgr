@@ -1,0 +1,87 @@
+﻿@{ 
+    if (Session["StatusStyle"] == null)
+    { Session["StatusStyle"] = "danger"; }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title :: DatabaseMgr</title>
+    @Styles.Render("~/styles/css")
+    @Scripts.Render("~/scripts/modernizr")
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            @Html.ActionLink("DatabaseMgr", "Index", "View", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="collapse navbar-collapse">
+                @if (Request.IsAuthenticated)
+                {
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" href="~/View">Databases</a></li>
+                        <li class="nav-item"><a class="nav-link" href="~/View/Servers">Servers</a></li>
+                    </ul>
+                    using (Html.BeginForm("Logoff", "Login", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right form-inline my-2 my-lg-0" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a class="nav-link" href="#">@User.Identity.Name</a></li>
+                            <button class="btn btn-sm btn-secondary my-2 my-sm-0" type="submit">Logout</button>
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+    </nav>
+
+    <!-- Body -->
+    <div class="container body-content">
+
+        <!-- Jumbrotron Header -->
+        <div class="jumbotron">
+            <h1 class="display-4">
+                @ViewBag.Title
+                @if (ViewBag.TitleImg != null)
+                {
+                    <img src="~/Images/@ViewBag.TitleImg" alt="@ViewBag.TitleImg" class="float-right d-none d-xl-block" />
+                }
+            </h1>
+        </div>
+
+        <!-- Status Messages -->
+        @if (Session["StatusMessage"] != null)
+        {
+            <div class="alert alert-@Session["StatusStyle"] alert-dismissible fade show" role="alert">
+                @Html.Raw(Session["StatusMessage"])
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        }
+
+        <!-- Body Content -->
+        @RenderBody()
+
+        <!-- Footer -->
+        <hr />
+        <footer>
+            <h6 class="small text-muted mb-3">&copy; @DateTime.Now.Year</h6>
+        </footer>
+    </div>
+
+    <!-- Javascript Links -->
+    @Scripts.Render("~/scripts/jquery")
+    @Scripts.Render("~/scripts/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
+@{ 
+    Session["StatusMessage"] = null;
+    Session["StatusStyle"] = null;
+}

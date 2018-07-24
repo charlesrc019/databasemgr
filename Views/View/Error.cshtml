@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Error";
+
+    if (Session["ErrorMessage"] == null)
+    { Session["ErrorMessage"] = "GENERIC_ERROR"; }
+
+    if (Session["ErrorInfo"] == null)
+    { Session["ErrorInfo"] = "No error information defined."; }
+}
+
+<h4>Unable to process your request.</h4>
+<hr />
+
+<h5>Error Code: <span class="text-danger">@Session["ErrorMessage"]</span></h5>
+<br />
+
+<p class="mb-1">
+    This may be a temporary issue. Please wait a couple of minutes and try again.<br />
+    If the problem persists, contact a system adminstrator.
+</p>
+
+<p class="mt-4 mb-1">Diagnostic Information:</p>
+<div class="error-output mb-4">
+    <pre class="mb-0 text-light">@Session["ErrorInfo"]</pre>
+</div>
+
+<input type="button" value="Go Back" class="btn btn-secondary" onclick="window.history.go(-1); return false;" />

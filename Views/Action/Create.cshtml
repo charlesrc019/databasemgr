@@ -1,0 +1,93 @@
+﻿@model DatabaseManager.Models.CreateSubmission
+@{
+    ViewBag.Title = "Create Database";
+}
+<!-- Server Information -->
+<h4>1. Server Information</h4>
+<hr />
+<div class="card bg-light mb-3">
+    <div class="card-header">
+        <strong>@Model.Host.Hostname</strong>
+        <button type="button" class="btn btn-secondary btn-sm float-right" onclick="location.href = '/View/Server';">Select a Different Server</button>
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item text-muted">
+            <i>Type:</i> <strong>@Model.Host.Type @Model.Host.Version</strong><br />
+            <i>Location:</i> <strong>@Model.Host.Location</strong><br />
+            <i>Database Count (yours/total):</i> <strong>@Model.Host.YourDatabases.Count/@Model.Host.TotalDatabases</strong>
+            <img src="~/Images/@(Model.Host.Developer).png" alt="@Model.Host.Developer" class="float-right" />
+            <table id="Databases_@Model.Host.ServerID" class="table table-striped table-hover table-sm text-muted" style="display:none;">
+                <tbody>
+                    @for (int j = 0; j < Model.Host.YourDatabases.Count; j++)
+                    {
+                        <tr>
+                            <td><a href="~/View/Database/@Model.Host.YourDatabases[j].DatabaseID" class="text-dark"><u>@Model.Host.YourDatabases[j].Name</u></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </li>
+    </ul>
+
+    <div class="card-footer text-center" style="border-top:none;">
+        <button type="button" id="ShowDatabases_@Model.Host.ServerID" class="btn btn-outline-secondary btn-xs" onclick="showDatabases('@Model.Host.ServerID');">View Your Databases</button>
+        <button type="button" id="HideDatabases_@Model.Host.ServerID" class="btn btn-outline-secondary btn-xs" style="display:none;" onclick="hideDatabases('@Model.Host.ServerID');">Hide Databases</button>
+    </div>
+</div>
+
+<!-- Database Information -->
+<br />
+<h4>2. Database Information</h4>
+<hr />
+
+<!-- Creation Form -->
+@using (Html.BeginForm("Create", "Action", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="DatabaseName">Database Name</label>
+            @Html.TextBoxFor(m => m.DatabaseName, new { @class = "form-control", @placeholder = "Database Name" })
+            <small class="text-muted">Database names must be unique per server.</small><br />
+            @Html.ValidationMessageFor(m => m.DatabaseName, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-6">
+            <label for="DatabaseUser">Admin Username</label>
+            <input class="form-control" data-val="true" data-val-required="Please enter a username." id="DatabaseUser" name="DatabaseUser" type="text" placeholder="Administrator Username" value="" readonly />
+            <small class="text-muted"><input class="form-check-inline" type="checkbox" id="CustomUsername" />Custom username?<span id="UniqueUsername" style="display:none;"> Usernames must be unique per server.</span></small><br />
+            @Html.ValidationMessageFor(m => m.DatabaseUser, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="DatabasePassword">Admin Password</label>
+            @Html.PasswordFor(m => m.DatabasePassword, new { @class = "form-control", @placeholder = "Password", @value = Model.DatabasePassword })
+            <small id="GeneratedPassword" class="text-muted">Randomly-generated, secure password. You'll be able to see it later.<br /></small>
+            <small id="UniquePassword" class="text-muted" style="display:none;">Passwords must be 8+ characters long and contain a letter, a number, and a special character.<br /></small>
+            @Html.ValidationMessageFor(m => m.DatabasePassword, "", new { @class = "text-danger" })
+        </div>
+        <div class="form-group col-md-6">
+            <label for="DatabasePasswordVerify">Verify Admin Password</label>
+            @Html.PasswordFor(m => m.DatabasePasswordVerify, new { @class = "form-control", @placeholder = "Verify Password", @value = Model.DatabasePassword })
+            <small class="text-muted">Passwords must match.</small>
+            @Html.ValidationMessageFor(m => m.DatabasePasswordVerify, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div id="DoNotSaveBlock" class="alert alert-warning" role="alert" style="display:none;">
+        <h5>Trying to be confidential?</h5>
+        <hr />
+        @Html.CheckBoxFor(m => m.DoNotSave)
+        <label for="SaveLogin">Do not save login credentials. </label><br />
+        <small><i>This will limit the functionality of Database Manager. Only use if necessary.</i></small>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create Database" class="btn btn-success" />
+        <input type="button" value="Cancel" class="btn btn-secondary" onclick="location.href = '/View';" />
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/scripts/custom_actioncreate")
+}
+
