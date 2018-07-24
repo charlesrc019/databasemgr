@@ -1,0 +1,89 @@
+﻿body {
+    padding: 0;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 2rem;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+.btn-xs {
+    padding: 0.125rem 0.4rem;
+    font-size: 0.75rem;
+}
+
+.error-output {
+    background-color: #343a40;
+    color: #FFF;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.sql-output {
+    background-color: #ddd;
+    color: black;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+pre {
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.jumbotron h1 img {
+    margin-top: -2rem;
+    height: 9rem;
+}
+
+.card ul li img {
+    height: 4rem;
+    margin-top: -2.5rem
+}
+
+.card-footer {
+    border-top: none !important;
+    padding: 0.5rem 1.25rem;
+}
+
+.table-sm {
+    margin-top: 1rem !important;
+    margin-bottom: 0.25rem !important;
+}
+
+table {
+    border-bottom: 1px solid #dee2e6;
+}
+
+.card .card-header .btn-sm {
+    margin: -0.2rem -0.75rem !important;
+}
+
+.validation-summary-errors ul {
+    margin: 0 !important;
+}
+
+.form-check-inline {
+    margin-right: 5px !important;
+}
+
+.alert label {
+    margin-bottom: 0 !important;
+}
+
+.alert {
+    margin-top: -1rem !important;
+}

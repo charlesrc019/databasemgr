@@ -1,0 +1,85 @@
+﻿@model DatabaseManager.Models.RestoreSubmission
+@{
+    ViewBag.Title = "Restore";
+}
+<!-- Database Information -->
+<h4>1. Database Information</h4>
+<hr />
+<div class="card bg-light mb-3">
+    <div class="card-header">
+        <strong>@Model.Database.Name</strong>
+    </div>
+
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item text-muted">
+            <i>Server:</i> <strong>@Model.Database.Host.Hostname</strong><br />
+            <i>Type:</i> <strong>@Model.Database.Host.Type @Model.Database.Host.Version</strong><br />
+            <i>Created:</i> <strong>@Model.Database.Created</strong>
+            <img src="~/Images/@(Model.Database.Host.Developer).png" alt="@Model.Database.Host.Developer" class="float-right" />
+        </li>
+    </ul>
+</div>
+
+<!-- Restore Information -->
+<h4>2. Restore Information</h4>
+<hr />
+
+<!-- Restore Form -->
+@using (Html.BeginForm("Restore", "Action", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "RestoreForm", enctype = "multipart/form-data" }))
+{
+<!-- Form Contents -->
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <div class="form-check">
+            @Html.RadioButtonFor(m => m.Method, "Select", new { @class = "form-check-input", @checked = "checked" })
+            <label class="form-check-label" for="Select">Restore from a backup on DatabaseMgr.</label>
+        </div>
+        @Html.DropDownListFor(m => m.FilePath, Model.Backups, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-md-6">
+        <div class="form-check">
+            @Html.RadioButtonFor(m => m.Method, "Upload", new { @class = "form-check-input" })
+            <label class="form-check-label" for="Upload">Upload a backup file.</label>
+        </div>
+        @Html.TextBoxFor(m => m.File, new { type = "file", name = "File", accept = ("." + Model.Database.Host.Protocol.ToLower()), @class = "form-control-file" })
+        <small class="text-muted">Backup files must match server version.</small>
+    </div>
+</div>
+<div class="form-group">
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#RestoreModal">Restore Database</button>
+    <input type="button" value="Cancel" class="btn btn-secondary" onclick="location.href = '/View/Database/@Model.Database.DatabaseID';" /><br />
+</div>
+
+<!-- Restore Modal -->
+<div class="modal fade" id="RestoreModal" tabindex="-1" role="dialog" aria-labelledby="RestoreModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="RestoreModalLabel">Confirm restore?</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Are you sure you want to restore this database?</p>
+                <ul class="font-weight-light font-italic">
+                    <li>Current data will be lost.</li>
+                    <li>Previous usernames and passwords may be reset.</li>
+                </ul>
+                <p class="text-danger mt-3 mb-0"><strong>This action is irreversible and cannot be undone.</strong></p>
+                <small class="text-muted font-italic">Note: Errors may occur if the selected file conflicts with an active database.</small>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <input type="submit" value="Restore Database" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/scripts/custom_actionrestore")
+}
