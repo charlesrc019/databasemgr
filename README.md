@@ -1,7 +1,6 @@
-##############################################################
-                         DATABASEMGR
-                      Charles Christensen
-##############################################################
+### DATABASEMGR ###
+Charles Christensen
+
 
 PREREQS
 1. Windows IIS with .NET 4.5.
